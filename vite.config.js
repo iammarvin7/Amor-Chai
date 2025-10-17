@@ -5,4 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: "/Amor-Chai_Website/", 
+<<<<<<< HEAD
 })
+=======
+})
+>>>>>>> d990343ad18759493b400a23027db7022c17c69e
