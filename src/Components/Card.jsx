@@ -2,7 +2,7 @@ import '../App.css'
 import { useState, useEffect } from 'react'
 
 const Card = ({product}) => {
-    const ImageURL = `/${product.image}`
+    const ImageURL = product.image;
 
 
 

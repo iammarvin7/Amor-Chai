@@ -4,7 +4,7 @@
         "name": "Signature Chai",
         "price": 4.25,
         "description": "Assam black tea, milk, sugar, green cardamom",
-        "image": "src/assets/sig.png"
+        "image": "src/assets/SigChai.png"
     },
     {
         "id": 2,
@@ -64,7 +64,7 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, cinnamon, green cardamom, cloves",
-        "image": "src/assets/sigLTB.png"
+        "image": "src/assets/sigLTB.jpg"
     },
     {
         "id": 10,
@@ -72,7 +72,7 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, mint",
-        "image": "src/assets/mintLTB.png"
+        "image": "src/assets/mintLTB.jpg"
     },
     {
         "id": 11,
@@ -80,6 +80,14 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, lavender, cardamom, clove",
-        "image": "src/assets/lavenderLTB.png"
+        "image": "src/assets/lavenderLTB.jpg"
+    },
+    {
+        "id": 12,
+        "name": "Chocolate Rose Chai",
+        "size": "1oz",
+        "price": 3.99,
+        "description": "Assam black tea, cinnamon, cardamom, clove, organic cacao nibs, organic rose petals",
+        "image": "src/assets/roseLTB.jpg"
     }
 ]
