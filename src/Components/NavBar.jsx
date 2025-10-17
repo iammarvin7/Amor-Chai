@@ -1,4 +1,5 @@
 import '../App.css'
+import { Link } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import instagramIcon from '../assets/instagram.png'
 
@@ -7,15 +8,19 @@ const NavBar = () => {
   const instagramUrl = "https://www.instagram.com/drinkamorchai/";
     return (
       <div className="navbar">
-        <img className="website-logo" src={logo} alt="logo" />
+        <Link to="/">
+          <img className="website-logo" src={logo} alt="logo" />
+        </Link>
         
         <div className="nav-links">
 
           <div className="nav-links-left">
-            <h1 className="nav-button">MENU</h1>
-            <h1 className="nav-button">OFFERS</h1>
-            <h1 className="nav-button">RECIPES</h1>
-            <h1 className="nav-button">WHO ARE WE?</h1>
+            <Link to="/" className="nav-button">HOME</Link>
+            <Link to="/Menu" className="nav-button">MENU</Link>
+            <Link to="/Offers" className="nav-button">OFFERS</Link>
+            <Link to="/Recipes" className="nav-button">RECIPES</Link>
+            <Link to="/Products" className="nav-button">PRODUCTS</Link>
+            <Link to="/WhoAreWe" className="nav-button">WHO ARE WE?</Link>
           </div>
 
           <div className="nav-links-right">
