@@ -4,7 +4,7 @@
         "name": "Signature Chai",
         "price": 4.25,
         "description": "Assam black tea, milk, sugar, green cardamom",
-        "image": "src/assets/SigChai.png"
+        "image": "/assets/SigChai.png"
     },
     {
         "id": 2,
@@ -12,35 +12,35 @@
         "flavors": ["Salted Caramel", "Lavender", "Vanilla", "Pumpkin Spice"],
         "description": "Assam black tea, milk, sugar, green cardamom, + your favourite Flavour",
         "price": 4.75,
-        "image": "src/assets/flav.png"
+        "image": "/assets/flav.png"
     },
     {
         "id": 3,
         "name": "Dirty Chai Latte",
         "description": "Assam black tea, milk, sugar, green cardamom,cold brew, + your favourite Flavour",
         "price": 5.25,
-        "image": "src/assets/dirtyChai.png"
+        "image": "/assets/dirtyChai.png"
     },
     {
         "id": 4,
         "name": "Jaipur Chai",
         "description": "Assam black tea, milk, sugar, green cardamom, your favourite Flavour, Cold Foam",
         "price": 6.25,
-        "image": "src/assets/pinkFlav.png"
+        "image": "/assets/pinkFlav.png"
     },
     {
         "id": 5,
         "name": "Midnight Chai",
         "description": "Assam black tea, milk, sugar, green cardamom, your favourite Flavour, Cold Foam",
         "price": 6.25,
-        "image": "src/assets/purpleFlav.png"
+        "image": "/assets/purpleFlav.png"
     },
     {
         "id": 6,
         "name": "Nutella Chai",
         "description": "Assam black tea, milk, sugar, green cardamom, your favourite Flavour, Nutella, Cold Foam",
         "price": 6.25,
-        "image": "src/assets/NutellaFlav.png"
+        "image": "/assets/NutellaFlav.png"
     },
     {
         "id": 7,
@@ -48,7 +48,7 @@
         "size": "9oz",
         "price": 8.99,
         "description": "Kadayi, Pistachio cream, Strawberries, Brownie, Nutella",
-        "image": "src/assets/DubaiChocolate.png"
+        "image": "/assets/DubaiChocolate.png"
     },
     {
         "id": 8,
@@ -56,7 +56,7 @@
         "description": "Strawberries and Nutella",
         "size": "9oz",
         "price": 6.99,
-        "image": "src/assets/StrawberryNutella.png"
+        "image": "/assets/StrawberryNutella.png"
     },
     {
         "id": 9,
@@ -64,7 +64,7 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, cinnamon, green cardamom, cloves",
-        "image": "src/assets/sigLTB.jpg"
+        "image": "/assets/sigLTB.jpg"
     },
     {
         "id": 10,
@@ -72,7 +72,7 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, mint",
-        "image": "src/assets/mintLTB.jpg"
+        "image": "/assets/mintLTB.jpg"
     },
     {
         "id": 11,
@@ -80,7 +80,7 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, lavender, cardamom, clove",
-        "image": "src/assets/lavenderLTB.jpg"
+        "image": "/assets/lavenderLTB.jpg"
     },
     {
         "id": 12,
@@ -88,6 +88,6 @@
         "size": "1oz",
         "price": 3.99,
         "description": "Assam black tea, cinnamon, cardamom, clove, organic cacao nibs, organic rose petals",
-        "image": "src/assets/roseLTB.jpg"
+        "image": "/assets/roseLTB.jpg"
     }
 ]
