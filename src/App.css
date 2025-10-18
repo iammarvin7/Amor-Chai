@@ -205,6 +205,7 @@ html, body {
     /* Responsive Grid: Creates columns that are at least 300px wide, and fits as many as possible */
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
     gap: 30px; /* Space between the cards */
+    margin: 2rem;
 }
 
 .product-card {

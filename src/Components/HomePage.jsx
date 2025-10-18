@@ -8,10 +8,10 @@ const HomePage = () => {
     
     return(
         <div className='media-gallery' >
-            <img className="poster_2" src={poster2} alt="Poster_2" />
+            <img className="poster_3" src={poster3} alt="Poster_3" />
             <img className="poster_1" src={poster1} alt="Poster_1" />
             <video className='video_1' src={video1} autoPlay muted loop> Your browser does not support the video tag.</video>
-            <img className="poster_3" src={poster3} alt="Poster_3" />
+            <img className="poster_2" src={poster2} alt="Poster_2" />
 
         </div>
     )
