@@ -1,11 +1,12 @@
 import '../App.css'
 import { Link } from 'react-router-dom'
-import logo from '../assets/logo.png'
-import instagramIcon from '../assets/instagram.png'
+import logo from '/assets/logo.png';
+import instagramIcon from '/assets/instagram.png';
 
 
 const NavBar = () => {
   const instagramUrl = "https://www.instagram.com/drinkamorchai/";
+  
     return (
       <div className="navbar">
         <Link to="/">

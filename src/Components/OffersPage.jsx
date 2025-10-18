@@ -1,5 +1,5 @@
 import '../App.css'
-import offer1 from '../assets/offer1.png'
+import offer1 from '/assets/offer1.png'
 
 const OffersPage = () => {
     return(

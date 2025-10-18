@@ -1,6 +1,6 @@
 import '../App.css'
-import Menu1 from '../assets/Menu1.png'
-import Menu2 from '../assets/Menu2.png'
+import Menu1 from '/assets/Menu1.png'
+import Menu2 from '/assets/Menu2.png'
 
 const MenuPage = () => {
     return(

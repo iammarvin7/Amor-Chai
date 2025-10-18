@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react'
 const Card = ({product}) => {
     const ImageURL = product.image;
 
-
-
     return(
         <div className="product-card">
             <img className="product-image" src={ImageURL} alt={product.name} />

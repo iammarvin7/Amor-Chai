@@ -1,8 +1,8 @@
 import '../App.css'
-import img1 from '../assets/sigChaiMasala.png'
-import img2 from '../assets/LavChaiMasala.png'
-import img3 from '../assets/MintChaiMasala.png'
-import img4 from '../assets/RoseChaiMasala.png'
+import img1 from '/assets/sigChaiMasala.png';
+import img2 from '/assets/LavChaiMasala.png';
+import img3 from '/assets/MintChaiMasala.png';
+import img4 from '/assets/RoseChaiMasala.png';
 
 const RecipePage = () => {
     return(

@@ -1,10 +1,11 @@
 import '../App.css'
-import poster1 from '../assets/poster1.png'
-import video1 from '../assets/video1.mp4'
-import poster2 from '../assets/poster2.png'
-import poster3 from '../assets/poster3.png'
+import poster1 from '/assets/poster1.png'
+import video1 from'/assets/video1.mp4'
+import poster2 from'/assets/poster2.png'
+import poster3 from'/assets/poster3.png'
 
 const HomePage = () => {
+    
     return(
         <div className='media-gallery' >
             <img className="poster_2" src={poster2} alt="Poster_2" />
