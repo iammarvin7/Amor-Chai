@@ -20,8 +20,10 @@ html, body {
 
 .navbar {
   display: flex;
-   gap: 3vw; 
-  width: stretch;
+  gap: 3vw; 
+  width: 100%; /* Changed from 'stretch' to '100%' */
+  max-width: 100%; /* Ensures it never exceeds viewport width */
+  box-sizing: border-box; /* Includes padding in width calculation */
   align-items: center;
   justify-content: space-between;
   padding: 1rem 3vw 0.8rem 3vw;
@@ -38,24 +40,25 @@ html, body {
   height: 6rem;
   width: auto;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out; 
+  transition: transform 0.3s ease-in-out;
+  flex-shrink: 0; /* Prevents logo from shrinking on smaller screens */
 }
 
 .website-logo:hover {
   transform: scale(1.1); 
 }
 
-
 .nav-links {
-  width: 200vw;
+  width: 100%; 
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1vw; /* Reduced gap for tighter spacing */
 }
 
 .nav-links-left {
   display: flex;
-  gap: 3rem;
+  gap: 2vw; /* Reduced gap to keep items on one line */
   align-items: center;
 }
 
@@ -63,6 +66,7 @@ html, body {
   margin-left: auto;
   display: flex;
   align-items: center;
+  flex-shrink: 0; /* Prevents Instagram icon from shrinking */
 }
 
 .nav-button {
@@ -70,7 +74,8 @@ html, body {
   color: #000;
   font-weight: bold;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease-in-out;
+  white-space: nowrap; /* Prevents text from breaking into multiple lines */
 }
 
 .instagram-icon {
@@ -82,13 +87,112 @@ html, body {
 .instagram-icon:hover {
   transform: scale(1.1); 
 }
-.nav-button:hover {
-  color: #ff647e;
-  transition: transform 0.3s ease-in-out; 
-}
 
 .nav-button:hover {
+  color: #ff647e;
   transform: scale(1.1); 
+}
+
+/* Responsive adjustments for smaller screens - everything stays in one line */
+@media (max-width: 1200px) {
+  .nav-button {
+    font-size: 15px;
+  }
+  
+  .navbar {
+    gap: 2.5vw;
+  }
+  
+  .nav-links-left {
+    gap: 2.5vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .website-logo {
+    height: 4.5rem;
+  }
+  
+  .nav-button {
+    font-size: 13px;
+  }
+  
+  .navbar {
+    padding: 1rem 2vw 0.8rem 2vw;
+    gap: 2vw;
+  }
+  
+  .nav-links-left {
+    gap: 2vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .website-logo {
+    height: 4rem;
+  }
+  
+  .nav-button {
+    font-size: 11px;
+  }
+  
+  .navbar {
+    padding: 0.8rem 1.5vw;
+    gap: 2vw;
+  }
+  
+  .nav-links-left {
+    gap: 2vw;
+  }
+  
+  .instagram-icon {
+    height: 2em;
+  }
+}
+
+@media (max-width: 600px) {
+  .website-logo {
+    height: 3.5rem;
+  }
+  
+  .nav-button {
+    font-size: 10px;
+  }
+  
+  .navbar {
+    padding: 0.6rem 1vw;
+    gap: 2vw;
+  }
+  
+  .nav-links-left {
+    gap: 2vw;
+  }
+  
+  .instagram-icon {
+    height: 1.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .website-logo {
+    height: 3rem;
+  }
+  
+  .nav-button {
+    font-size: 9px;
+  }
+  
+  .navbar {
+    gap: 2vw;
+  }
+  
+  .nav-links-left {
+    gap: 2vw;
+  }
+  
+  .instagram-icon {
+    height: 1.6em;
+  }
 }
 
 .poster_1, .video_1, .poster_2, .poster_3{
@@ -178,11 +282,6 @@ html, body {
   font-size: 2rem;
 }
 
-.Estrella-img{
-  border-radius: 5%;
-  max-width: 20rem;
-
-}
 
 .products-wrapper {
     max-width: 1400px;
@@ -216,6 +315,7 @@ html, body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .product-card:hover {
@@ -236,6 +336,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    /* padding-bottom: 90px; */
 }
 
 .product-name {
@@ -334,3 +435,4 @@ html, body {
     box-shadow: 0 8px 25px 5px rgb(250, 149, 182), 
                 0 0 15px 3px rgb(241, 194, 147);  
 }
+

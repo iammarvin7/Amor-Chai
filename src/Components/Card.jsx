@@ -18,6 +18,7 @@ const Card = ({product}) => {
                 {product.flavors && (
                    <p className="product-flavors">Flavors: {product.flavors.join(', ')}</p>
                 )}
+            
             </div>
         </div>
     )
