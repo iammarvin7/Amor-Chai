@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global resets and base styles can be minimal because we favor Tailwind utilities */
+
+/* Theme CSS Variables - Default to pink theme */
+/* These are updated dynamically by ThemeContext, but we set defaults here for SSR */
+:root {
+	/* Primary colors */
+	--theme-primary: #f88c97;
+	--theme-primary2: #ff647e;
+	--theme-secondary: #ffe0b2;
+	--theme-tertiary: #f7e8ba;
+	
+	/* Gradient - Default to pink theme (3-stop gradient) */
+	--theme-gradient: linear-gradient(to bottom right, #f7e8ba, #ffe0b2, #f88c97);
+	/* Individual gradient stops for backward compatibility */
+	--theme-gradient-from: #f7e8ba;
+	--theme-gradient-via: #ffe0b2;
+	--theme-gradient-to: #f88c97;
+	
+	/* Extended palette */
+	--theme-text: #1f2937;
+	--theme-text-light: #6b7280;
+	--theme-button: #ff647e;
+	--theme-button-hover: #f88c97;
+	--theme-button-text: #ffffff;
+	--theme-border: #ff647e;
+	--theme-border-light: #ffe0b2;
+	--theme-badge: #f7e8ba;
+	--theme-badge-text: #1f2937;
+	--theme-icon: #ff647e;
+	--theme-card: #ffffff;
+	--theme-card-border: #ffe0b2;
+	
+	/* Glow effects */
+	--theme-glow-shadow: 0 0 15px 7px rgba(255, 195, 216, 0.8), 0 0 8px 1px rgba(255, 255, 255, 1);
+	--theme-glow-shadow-hover: 0 8px 25px 5px rgb(250, 149, 182), 0 0 15px 3px rgb(241, 194, 147);
+}
+
+/* Smooth scroll for better UX */
+html {
+	scroll-behavior: smooth;
+}
+
+/* Ensure gradient background covers full viewport */
+body {
+	background-attachment: fixed;
+	background-size: cover;
+	background-repeat: no-repeat;
+	transition: background 0.3s ease;
+}
+
+/* Ensure Next.js portal wrapper doesn't affect layout or cause hydration warnings */
+nextjs-portal {
+	display: contents;
+}
+
+/* Intro overlay fade-in-out */
+@keyframes introFade {
+	0% { opacity: 0; transform: translateY(12px) scale(0.98); }
+	15% { opacity: 1; transform: translateY(0) scale(1); }
+	80% { opacity: 1; transform: translateY(0) scale(1); }
+	100% { opacity: 0; transform: translateY(-6px) scale(0.99); }
+}
+.intro-fade {
+	animation: introFade 1.6s ease forwards;
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}
+
+/* Add shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(to right, #f3f4f6 4%, #e5e7eb 25%, #f3f4f6 36%);
+  background-size: 1000px 100%;
+}
+
+/* Add fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+
