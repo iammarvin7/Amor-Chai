@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { Suspense } from 'react';
 import NavBar from './NavBar';
 import Footer from './Footer';
 import SmoothScroll from './SmoothScroll';
@@ -37,7 +38,9 @@ export default function RootClientLayout({ children }) {
                     gtag('config', '${GA_MEASUREMENT_ID}', { send_page_view: false });
                 `}
             </Script>
-            <Analytics measurementId={GA_MEASUREMENT_ID} />
+            <Suspense fallback={null}>
+                <Analytics measurementId={GA_MEASUREMENT_ID} />
+            </Suspense>
             <ThemeProvider>
                 <SmoothScroll />
                 <ThemeSwitcher />
