@@ -1,11 +1,6 @@
 {
-  "/checkout/page": "app/checkout/page.js",
+  "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js",
   "/products/page": "app/products/page.js",
-  "/home/page": "app/home/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/offers/page": "app/offers/page.js",
-  "/recipes/page": "app/recipes/page.js",
-  "/menu/page": "app/menu/page.js",
-  "/page": "app/page.js",
-  "/who-are-we/page": "app/who-are-we/page.js"
+  "/checkout/page": "app/checkout/page.js",
+  "/page": "app/page.js"
 }

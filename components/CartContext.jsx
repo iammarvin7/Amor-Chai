@@ -246,39 +246,93 @@ export const CartProvider = ({ children }) => {
 		}
 	}, [items, userId, isLoading, isLoadingCart, signingOut]);
 
-	const addItem = (product) => {
-		setItems((prev) => {
-			const existing = prev.find((p) => p.id === product.id);
-			let newItems;
-			if (existing) {
-				newItems = prev.map((p) => (p.id === product.id ? { ...p, qty: p.qty + 1 } : p));
-			} else {
-				newItems = [...prev, { ...product, qty: 1 }];
-			}
-			saveCartToLocalStorage(newItems); // Instant Mirror
-			return newItems;
-		});
+	const addToCart = async (product) => {
+		const productId = String(product.id);
+		const currentItems = [...items];
+		const existingItemIndex = currentItems.findIndex((item) => String(item.id) === productId);
+
+		let newItems;
+		if (existingItemIndex > -1) {
+			// ITEM EXISTS: Clone array, increment qty at index
+			currentItems[existingItemIndex] = {
+				...currentItems[existingItemIndex],
+				qty: (currentItems[existingItemIndex].qty || 1) + 1
+			};
+			newItems = currentItems;
+		} else {
+			// NEW ITEM: Add to array with qty: 1
+			newItems = [...currentItems, { ...product, qty: 1 }];
+		}
+
+		// Update local state immediately
+		setItems(newItems);
+		saveCartToLocalStorage(newItems);
 		setIsOpen(true);
+
+		// SYNC TO SUPABASE
+		if (userId && supabase) {
+			try {
+				const itemToSync = existingItemIndex > -1 
+					? newItems[existingItemIndex] 
+					: newItems[newItems.length - 1];
+
+				await supabase.from('user_cart').upsert({ 
+					user_id: userId, 
+					product_id: productId,
+					product_name: itemToSync.name || '',
+					product_price: itemToSync.price || 0,
+					product_image: itemToSync.image || '',
+					quantity: itemToSync.qty 
+				}, { onConflict: 'user_id, product_id' });
+			} catch (err) {
+				console.error('Error syncing item to Supabase:', err);
+			}
+		}
 	};
 
-	const removeItem = (id) => {
-		setItems((prev) => {
-            // Check if item exists and get current qty
-            const existingItem = prev.find(p => p.id === id);
-            if (!existingItem) return prev;
+	const removeItem = async (id) => {
+		const productId = String(id);
+		const currentItems = [...items];
+		const existingItemIndex = currentItems.findIndex((item) => String(item.id) === productId);
 
-            let newItems;
-            if (existingItem.qty > 1) {
-                // Decrement
-                newItems = prev.map(p => p.id === id ? { ...p, qty: p.qty - 1 } : p);
-            } else {
-                // Remove
-                newItems = prev.filter((p) => p.id !== id);
-            }
+		if (existingItemIndex === -1) return;
+
+		let newItems;
+		const existingItem = currentItems[existingItemIndex];
+
+		if (existingItem.qty > 1) {
+			// Decrement
+			currentItems[existingItemIndex] = {
+				...existingItem,
+				qty: existingItem.qty - 1
+			};
+			newItems = currentItems;
+		} else {
+			// Remove
+			newItems = currentItems.filter((p) => String(p.id) !== productId);
+		}
 			
-			saveCartToLocalStorage(newItems); // Instant Mirror
-			return newItems;
-		});
+		setItems(newItems);
+		saveCartToLocalStorage(newItems);
+
+		// SYNC TO SUPABASE
+		if (userId && supabase) {
+			try {
+				if (existingItem.qty > 1) {
+					// Update quantity
+					await supabase.from('user_cart').update({ 
+						quantity: existingItem.qty - 1 
+					}).eq('user_id', userId).eq('product_id', productId);
+				} else {
+					// Delete item
+					await supabase.from('user_cart').delete()
+						.eq('user_id', userId)
+						.eq('product_id', productId);
+				}
+			} catch (err) {
+				console.error('Error removing item from Supabase:', err);
+			}
+		}
 	};
 
 	const updateQty = (id, qty) => {
@@ -325,7 +379,7 @@ export const CartProvider = ({ children }) => {
 	}, [items]);
 
 	const value = useMemo(
-		() => ({ items, addItem, removeItem, updateQty, clear, total, isOpen, toggle, open, close, isLoading }),
+		() => ({ items, addItem: addToCart, removeItem, updateQty, clear, total, isOpen, toggle, open, close, isLoading }),
 		[items, total, isOpen, isLoading]
 	);
 
