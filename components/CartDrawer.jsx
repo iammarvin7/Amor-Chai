@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 const CartDrawer = () => {
 	const { items, removeItem, updateQty, total, isOpen, close, clear } = useCart();
-	const { user, signingOut, handleSignOut } = useAuth();
+	const { user, signingOut, handleSignOut, openAuthModal } = useAuth();
 	const [notice, setNotice] = useState('');
 	const [userName, setUserName] = useState('');
 	const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
@@ -27,6 +27,18 @@ const CartDrawer = () => {
 	const showErrorToast = (message) => {
 		setNotice(message);
 		setTimeout(() => setNotice(''), 5000);
+	};
+
+	const handleCheckout = (e) => {
+		if (!items.length) {
+			e.preventDefault();
+			return;
+		}
+		if (!user) {
+			e.preventDefault();
+			alert('Please sign in to complete your purchase!');
+			if (openAuthModal) openAuthModal();
+		}
 	};
 
 	const onSignOut = async () => {
@@ -130,7 +142,7 @@ const CartDrawer = () => {
 									target="_blank"
 									rel="noopener noreferrer"
 									className={`flex-1 text-center rounded-lg bg-brand-pink2 px-4 py-2 font-semibold text-white ${!items.length ? 'opacity-60 pointer-events-none' : ''}`}
-									onClick={(e) => { if (!items.length) e.preventDefault(); }}
+									onClick={handleCheckout}
 								>
 									Checkout
 								</a>

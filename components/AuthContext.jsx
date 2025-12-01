@@ -30,8 +30,19 @@ export const AuthProvider = ({ children }) => {
 	const [signingOut, setSigningOut] = useState(false);
 	const [signOutSuccessMessage, setSignOutSuccessMessage] = useState(null);
 	const [showReloadAlert, setShowReloadAlert] = useState(false);
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const [authModalTab, setAuthModalTab] = useState('login');
 	const authSubscriptionRef = useRef(null);
 	const signOutInProgressRef = useRef(false);
+
+	const openAuthModal = (tab = 'login') => {
+		setAuthModalTab(tab);
+		setIsAuthModalOpen(true);
+	};
+
+	const closeAuthModal = () => {
+		setIsAuthModalOpen(false);
+	};
 
 	// Clear all storage related to auth and session
 	const clearAllStorage = useCallback(() => {
@@ -277,11 +288,15 @@ export const AuthProvider = ({ children }) => {
 			signingOut,
 			signOutSuccessMessage,
 			showReloadAlert,
+			isAuthModalOpen,
+			authModalTab,
+			openAuthModal,
+			closeAuthModal,
 			handleSignOut,
 			clearSignOutMessage: () => setSignOutSuccessMessage(null),
 			dismissReloadAlert: () => setShowReloadAlert(false),
 		}),
-		[user, session, isLoading, signingOut, signOutSuccessMessage, showReloadAlert, handleSignOut]
+		[user, session, isLoading, signingOut, signOutSuccessMessage, showReloadAlert, isAuthModalOpen, authModalTab, handleSignOut]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

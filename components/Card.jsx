@@ -9,13 +9,22 @@ const Card = ({ product }) => {
 	const imageUrl = product.image;
 	const { addItem } = useCart();
 	const { likeCounts, userLikes, refreshLikes } = useProductLikes();
-	const { user } = useAuth();
+	const { user, openAuthModal } = useAuth();
 			const productId = String(product.id);
 			
 	// Get like count and hasLiked from context (instant, no loading)
 	const likeCount = likeCounts[productId] || 0;
 	const hasLiked = userLikes.has(productId);
 	const userId = user?.id || null;
+
+	const handleAddToCart = () => {
+		if (!user) {
+			alert('Please sign in to start your order!');
+			if (openAuthModal) openAuthModal();
+			return;
+		}
+		addItem(product);
+	};
 
 	const handleLike = async () => {
 		if (!supabase) {
@@ -139,7 +148,7 @@ const Card = ({ product }) => {
 			<div className="pointer-events-none absolute inset-x-0 bottom-0 p-3 sm:p-5">
 				<button
 					type="button"
-					onClick={() => addItem(product)}
+					onClick={handleAddToCart}
 					className="pointer-events-auto w-full rounded-lg border-2 border-brand-pink2 px-3 py-2 text-xs font-semibold text-brand-pink2 transition-all duration-300 hover:bg-brand-pink2 hover:text-white sm:px-5 sm:py-3 sm:text-base"
 				>
 					Add to Cart

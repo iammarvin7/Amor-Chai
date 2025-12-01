@@ -12,24 +12,24 @@ import {
 import supabase from '../../lib/supabaseClient';
 
 const ChaiFormSkeleton = () => (
-  <div className='w-full animate-pulse space-y-8'>
+  <div className='relative w-full h-full animate-pulse space-y-8 flex flex-col justify-center'>
     {/* Shipping Address Skeleton */}
     <div className='space-y-4'>
-      <div className='h-6 w-1/3 bg-gray-200 rounded'></div> {/* Label */}
-      <div className='h-12 w-full bg-gray-100 rounded'></div> {/* Input */}
-      <div className='h-12 w-full bg-gray-100 rounded'></div> {/* Input */}
+      <div className='h-6 w-1/3 bg-white/50 rounded'></div> {/* Label */}
+      <div className='h-12 w-full bg-white/30 rounded'></div> {/* Input */}
+      <div className='h-12 w-full bg-white/30 rounded'></div> {/* Input */}
       <div className='grid grid-cols-2 gap-4'>
-        <div className='h-12 w-full bg-gray-100 rounded'></div> {/* City */}
-        <div className='h-12 w-full bg-gray-100 rounded'></div> {/* ZIP */}
+        <div className='h-12 w-full bg-white/30 rounded'></div> {/* City */}
+        <div className='h-12 w-full bg-white/30 rounded'></div> {/* ZIP */}
       </div>
     </div>
     {/* Payment Skeleton */}
     <div className='space-y-4'>
-       <div className='h-6 w-1/4 bg-gray-200 rounded'></div> {/* Label */}
-       <div className='h-48 w-full bg-gray-100 rounded border border-gray-200'></div> {/* Payment Element Placeholder */}
+       <div className='h-6 w-1/4 bg-white/50 rounded'></div> {/* Label */}
+       <div className='h-48 w-full bg-white/30 rounded border border-white/20'></div> {/* Payment Element Placeholder */}
     </div>
     {/* Pay Button Skeleton */}
-    <div className='h-12 w-full bg-amber-200 rounded opacity-50'></div>
+    <div className='h-12 w-full bg-amber-200/50 rounded'></div>
   </div>
 );
 
@@ -135,10 +135,11 @@ export default function CheckoutPage() {
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
-  const options: StripeElementsOptions = {
+  // Safely define options only when clientSecret is available
+  const options: StripeElementsOptions | undefined = clientSecret ? {
     clientSecret,
     appearance: { theme: 'stripe' },
-  };
+  } : undefined;
 
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row items-start">
@@ -195,14 +196,18 @@ export default function CheckoutPage() {
       </div>
 
       {/* Right Column: Payment Form */}
-      <div className="w-full lg:w-[55%] bg-white min-h-screen flex flex-col px-8 py-12 lg:overflow-y-auto">
-        <div className="w-full max-w-md mx-auto">
+      <div className={`w-full lg:w-[55%] min-h-screen flex flex-col px-8 py-12 lg:overflow-y-auto transition-colors duration-700 ${!clientSecret ? 'bg-gradient-to-br from-matcha-lightest to-matcha-darkest' : 'bg-white'}`}>
+        <div className="w-full max-w-md mx-auto h-full">
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-            {clientSecret ? (
+            {clientSecret && options ? (
             <Elements options={options} stripe={stripePromise}>
                 <CheckoutForm />
             </Elements>
-            ) : !error && <ChaiFormSkeleton />}
+            ) : !error && (
+                 <div className="h-full flex flex-col justify-center">
+                    <ChaiFormSkeleton />
+                 </div>
+            )}
         </div>
       </div>
     </div>
@@ -300,7 +305,7 @@ function CheckoutForm() {
                       Still want to feel the flavors loved by many? We might still be able to make it happen! Contact us on Instagram to arrange a special delivery.
                   </p>
                   <a 
-                      href="https://instagram.com/amorandchai" 
+                      href="https://www.instagram.com/drinkamorchai/" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"

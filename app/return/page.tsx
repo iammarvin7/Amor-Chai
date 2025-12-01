@@ -70,7 +70,7 @@ function ReturnPageLogic() {
   const [status, setStatus] = useState<string | null>(null);
   const [message, setMessage] = useState<string>('Loading...');
   const searchParams = useSearchParams();
-  const clientSecret = searchParams.get('payment_intent_client_secret');
+  const clientSecret = searchParams?.get('payment_intent_client_secret');
 
   useEffect(() => {
     if (!clientSecret) {
