@@ -7,10 +7,12 @@ import Link from 'next/link';
 
 const CartDrawer = () => {
 	const { items, removeItem, updateQty, total, isOpen, close, clear } = useCart();
-	const { user, signingOut, handleSignOut, openAuthModal } = useAuth();
+	const { user, signingOut: authSigningOut, handleSignOut: authHandleSignOut, openAuthModal } = useAuth();
 	const [notice, setNotice] = useState('');
 	const [userName, setUserName] = useState('');
 	const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+	const [isSigningOut, setIsSigningOut] = useState(false);
+	const [signOutText, setSignOutText] = useState('Sign Out');
 	
 	const isLoggedIn = !!user;
 
@@ -41,20 +43,39 @@ const CartDrawer = () => {
 		}
 	};
 
-	const onSignOut = async () => {
+	const performSignOut = async () => {
+		// 1. Start process
+		setIsSigningOut(true);
+		setSignOutText('Signing out...');
+		
+		// 2. Wait 2 seconds
+		await new Promise(resolve => setTimeout(resolve, 2000));
+		
+		// 3. Update status
+		setSignOutText('Reloading page...');
+		
+		// 4. Wait another 2 seconds
+		await new Promise(resolve => setTimeout(resolve, 2000));
+		
+		// 5. Execute sign out and reload
+		if (supabase) await supabase.auth.signOut();
+		window.location.reload();
+	};
+
+	const onSignOut = () => {
 		if (items.length > 0) {
 			// Show confirmation if cart has items
 			setShowSignOutConfirm(true);
 			return;
 		}
 		// No items, sign out directly
-		await handleSignOut(showErrorToast);
+		performSignOut();
 	};
 
-	const confirmSignOut = async () => {
+	const confirmSignOut = () => {
 		// User confirmed, proceed with sign out
 		setShowSignOutConfirm(false);
-		await handleSignOut(showErrorToast);
+		performSignOut();
 	};
 
 	return (
@@ -161,10 +182,18 @@ const CartDrawer = () => {
 					{isLoggedIn && (
 						<button
 							onClick={onSignOut}
-							disabled={signingOut}
-							className="mt-4 w-full rounded-lg bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							disabled={isSigningOut}
+							className={`mt-4 w-full rounded-lg px-4 py-2 font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed ${
+								isSigningOut ? 'bg-red-300 animate-pulse' : 'bg-red-500 hover:bg-red-600'
+							}`}
 						>
-							{signingOut ? 'Signing out...' : 'Sign Out'}
+							{isSigningOut && (
+								<svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+									<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+							)}
+							{signOutText}
 						</button>
 					)}
 				</div>
@@ -180,14 +209,24 @@ const CartDrawer = () => {
 						<div className="flex gap-3">
 							<button
 								onClick={confirmSignOut}
-								disabled={signingOut}
-								className="flex-1 rounded-lg bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+								disabled={isSigningOut}
+								className={`flex-1 rounded-lg px-4 py-2 font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed ${
+									isSigningOut ? 'bg-red-300 animate-pulse' : 'bg-red-500 hover:bg-red-600'
+								}`}
 							>
-								{signingOut ? 'Signing out...' : 'Yes, Sign Out'}
+								{isSigningOut ? (
+									<>
+										<svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+											<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+											<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+										</svg>
+										<span>{signOutText}</span>
+									</>
+								) : 'Yes, Sign Out'}
 							</button>
 							<button
 								onClick={() => setShowSignOutConfirm(false)}
-								disabled={signingOut}
+								disabled={isSigningOut}
 								className="flex-1 rounded-lg border px-4 py-2 font-semibold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								Cancel
