@@ -98,7 +98,10 @@ const AuthModal = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { first_name: firstName, last_name: lastName } },
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            data: { first_name: firstName, last_name: lastName }
+          },
         });
         
         if (error) throw error;
