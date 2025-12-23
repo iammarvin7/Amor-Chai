@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useMemo, useState, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import supabase from '../lib/supabaseClient';
 import { useAuth } from './AuthContext';
 
@@ -57,7 +57,7 @@ export const CartProvider = ({ children }) => {
 	});
 
 	// Load cart from Supabase
-	const loadCartFromSupabase = async (uid) => {
+	const loadCartFromSupabase = useCallback(async (uid) => {
 		if (!supabase || !uid) return [];
 
 		setIsLoadingCart(true);
@@ -82,10 +82,10 @@ export const CartProvider = ({ children }) => {
 		} finally {
 			setIsLoadingCart(false);
 		}
-	};
+	}, []);
 
 	// Save cart to Supabase
-	const saveCartToSupabase = async (uid, cartItems) => {
+	const saveCartToSupabase = useCallback(async (uid, cartItems) => {
 		if (!supabase || !uid) return;
 
 		// If already syncing, skip this save - the next change will trigger another save
@@ -137,7 +137,7 @@ export const CartProvider = ({ children }) => {
 		} finally {
 			isSyncingRef.current = false;
 		}
-	};
+	}, []);
 
 	// Load cart from localStorage (for anonymous users)
 	const loadCartFromLocalStorage = () => {
@@ -228,7 +228,7 @@ export const CartProvider = ({ children }) => {
 				}
 			}
 		};
-	}, []);
+	}, [loadCartFromSupabase]);
 
 	// Sync cart to persistence layers when items change
 	useEffect(() => {
@@ -244,7 +244,7 @@ export const CartProvider = ({ children }) => {
 		if (userId && supabase) {
 			saveCartToSupabase(userId, items);
 		}
-	}, [items, userId, isLoading, isLoadingCart, signingOut]);
+	}, [items, userId, isLoading, isLoadingCart, signingOut, saveCartToSupabase]);
 
 	const addToCart = async (product) => {
 		const productId = String(product.id);
@@ -380,7 +380,7 @@ export const CartProvider = ({ children }) => {
 
 	const value = useMemo(
 		() => ({ items, addItem: addToCart, removeItem, updateQty, clear, total, isOpen, toggle, open, close, isLoading }),
-		[items, total, isOpen, isLoading]
+		[items, total, isOpen, isLoading, addToCart, removeItem, updateQty, clear, toggle, open, close]
 	);
 
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

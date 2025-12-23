@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 
 const TiltImage = ({ src, alt, isActive }) => {
     const wrapperRef = useRef(null);
@@ -55,13 +56,17 @@ const TiltImage = ({ src, alt, isActive }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <img
-                src={src}
-                alt={alt}
-                className="h-full w-full object-cover"
-                draggable={false}
-                loading="eager"
-            />
+            <div className="relative h-full w-full">
+                <Image
+                    src={src}
+                    alt={alt}
+                    fill
+                    className="object-cover"
+                    draggable={false}
+                    loading="eager"
+                    sizes="(max-width: 768px) 15rem, (max-width: 1024px) 18rem, 20rem"
+                />
+            </div>
             
             {/* Soapy bubble tooltip */}
             {isHovered && alt && (

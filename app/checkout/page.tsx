@@ -10,6 +10,7 @@ import {
   useElements
 } from '@stripe/react-stripe-js';
 import supabase from '../../lib/supabaseClient';
+import Image from 'next/image';
 
 // Define types for safety
 type CartItem = {
@@ -35,65 +36,26 @@ export default function CheckoutPage() {
 
   // On component mount, load cart and create a payment intent
   useEffect(() => {
-    let items: CartItem[] = [];
-    
-    // 1. Load from Local Storage First (Fastest)
-    try {
-      const rawCart = localStorage.getItem('amor_cart');
-      if (rawCart) {
-        items = JSON.parse(rawCart);
-        setCartItems(items); // Show immediately
-      }
-    } catch (e) {
-      console.error('Local cart error:', e);
-    }
-
-    // 2. Background Sync with Supabase (Latest Truth)
-    const syncSupabaseCart = async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            const { data, error } = await supabase
-                .from('user_cart')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: true });
-            
-            if (!error && data) {
-                 const dbItems: CartItem[] = data.map((dbItem: any) => ({
-                    id: dbItem.product_id,
-                    name: dbItem.product_name,
-                    price: parseFloat(dbItem.product_price),
-                    image: dbItem.product_image,
-                    qty: dbItem.quantity,
-                 }));
-
-                 // If Supabase has more/different items, update state AND local storage
-                 if (dbItems.length > items.length || JSON.stringify(dbItems) !== JSON.stringify(items)) {
-                     console.log('Syncing cart from Supabase...');
-                     setCartItems(dbItems);
-                     localStorage.setItem('amor_cart', JSON.stringify(dbItems));
-                     return dbItems; // Return new items for payment intent
-                 }
-            }
-        }
-        return items; // Return local items if no update
-    };
-
-    // 3. Initialize Payment Intent (using the freshest items)
-    syncSupabaseCart().then((finalItems) => {
-        if (finalItems.length === 0) {
+    // Helper to create intent
+    const createPaymentIntent = (items: CartItem[]) => {
+        if (items.length === 0) {
             setError('Your cart is empty.');
             return;
         }
-
-        const timeoutId = setTimeout(() => {
-             setInitError('Connection timed out. Please refresh.');
-        }, 15000); // 15s timeout
         
+        // Timeout fail-safe
+        const timeoutId = setTimeout(() => {
+             // Only show error if we still don't have a secret
+             setClientSecret(prev => {
+                if (!prev) setInitError('Connection timed out. Please refresh.');
+                return prev;
+             });
+        }, 15000);
+
         fetch('/api/create-payment-intent', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: finalItems }),
+            body: JSON.stringify({ items }),
         })
         .then(async (res) => {
             clearTimeout(timeoutId);
@@ -102,9 +64,9 @@ export default function CheckoutPage() {
         })
         .then((data) => {
             if (data.clientSecret) {
-            setClientSecret(data.clientSecret);
+                setClientSecret(data.clientSecret);
             } else {
-            setInitError(data.error || 'Failed to initialize payment.');
+                setInitError(data.error || 'Failed to initialize payment.');
             }
         })
         .catch((err) => {
@@ -112,7 +74,65 @@ export default function CheckoutPage() {
             setInitError('Failed to load payment system.');
             console.error(err);
         });
-    });
+    };
+
+    // Helper to sync DB
+    const syncSupabaseCart = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data, error } = await supabase
+                    .from('user_cart')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: true });
+                
+                if (!error && data) {
+                    const dbItems: CartItem[] = data.map((dbItem: any) => ({
+                        id: dbItem.product_id,
+                        name: dbItem.product_name,
+                        price: parseFloat(dbItem.product_price),
+                        image: dbItem.product_image,
+                        qty: dbItem.quantity,
+                    }));
+                    return dbItems;
+                }
+            }
+        } catch (e) {
+            console.error('Sync error:', e);
+        }
+        return [];
+    };
+
+    // MAIN LOGIC: Optimistic Load
+    let localItems: CartItem[] = [];
+    try {
+      const rawCart = localStorage.getItem('amor_cart');
+      if (rawCart) {
+        localItems = JSON.parse(rawCart);
+        setCartItems(localItems); // Render immediately
+      }
+    } catch (e) {
+      console.error('Local cart error:', e);
+    }
+
+    if (localItems.length > 0) {
+        // FAST PATH: Use local items immediately
+        createPaymentIntent(localItems);
+        // Sync DB in background
+        syncSupabaseCart(); 
+    } else {
+        // SLOW PATH: Must wait for DB
+        syncSupabaseCart().then((dbItems) => {
+            if (dbItems.length > 0) {
+                setCartItems(dbItems);
+                localStorage.setItem('amor_cart', JSON.stringify(dbItems));
+                createPaymentIntent(dbItems);
+            } else {
+                setError('Your cart is empty.');
+            }
+        });
+    }
 
   }, []);
 
@@ -135,13 +155,13 @@ export default function CheckoutPage() {
       {/* Left Column: Order Summary */}
       <div className="w-full lg:w-[45%] bg-gray-50 border-r border-gray-200 lg:min-h-screen flex flex-col px-8 py-12 lg:sticky lg:top-0">
         <div className="max-w-md mx-auto w-full">
-            <img src="/assets/logo.png" alt="Amor Chai Logo" className="h-12 mb-8" />
+            <Image src="/assets/logo.png" alt="Amor Chai Logo" width={150} height={48} className="h-12 w-auto mb-8" />
             <h1 className="text-xl font-semibold mb-6">Order Summary</h1>
             {cartItems.length > 0 ? (
                  <div className="space-y-4">
                     {cartItems.map(item => (
                         <div key={item.id} className="flex items-center gap-4">
-                            <img src={item.image} alt={item.name} className="w-16 h-16 rounded-md object-cover" />
+                            <Image src={item.image} alt={item.name} width={64} height={64} className="w-16 h-16 rounded-md object-cover" />
                             <div className="flex-grow">
                             <p className="font-semibold">{item.name}</p>
                             <p className="text-sm text-gray-600">Quantity: {item.qty}</p>
@@ -157,11 +177,11 @@ export default function CheckoutPage() {
                     
                     {/* Payment Methods */}
                     <div className="flex flex-wrap justify-center gap-2 mt-4">
-                        <img src="/assets/icons/Visa.png" alt="Visa" className="h-8 w-auto object-contain" />
-                        <img src="/assets/icons/Mastercard.png" alt="Mastercard" className="h-8 w-auto object-contain" />
-                        <img src="/assets/icons/Amex.png" alt="American Express" className="h-8 w-auto object-contain" />
-                        <img src="/assets/icons/ApplePay.png" alt="Apple Pay" className="h-8 w-auto object-contain" />
-                        <img src="/assets/icons/GooglePay.png" alt="Google Pay" className="h-8 w-auto object-contain" />
+                        <Image src="/assets/icons/Visa.png" alt="Visa" width={50} height={32} className="h-8 w-auto object-contain" />
+                        <Image src="/assets/icons/Mastercard.png" alt="Mastercard" width={50} height={32} className="h-8 w-auto object-contain" />
+                        <Image src="/assets/icons/Amex.png" alt="American Express" width={50} height={32} className="h-8 w-auto object-contain" />
+                        <Image src="/assets/icons/ApplePay.png" alt="Apple Pay" width={50} height={32} className="h-8 w-auto object-contain" />
+                        <Image src="/assets/icons/GooglePay.png" alt="Google Pay" width={50} height={32} className="h-8 w-auto object-contain" />
                     </div>
                     
                     {/* Trust Badges */}
@@ -211,8 +231,7 @@ export default function CheckoutPage() {
                 </Elements>
             ) : !error && (
                  <div className="h-full flex flex-col justify-center items-center">
-                    {/* Simple Loader */}
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                    {/* NO LOADER - Intentionally empty to reduce layout shifts/flicker while loading */}
                  </div>
             )}
         </div>
@@ -235,19 +254,6 @@ function CheckoutForm() {
   const [isCheckingZone, setIsCheckingZone] = useState(false);
   const [isOutsideZone, setIsOutsideZone] = useState(false);
   const [addressDetails, setAddressDetails] = useState<any>(null);
-
-  // Local state to track when PaymentElement is fully rendered
-  const [isStripeReady, setIsStripeReady] = useState(false);
-
-  // Fail-safe: Force ready state after 3s to prevent infinite loading if onReady misses
-  useEffect(() => {
-    if (stripe && elements && !isStripeReady) {
-      const timer = setTimeout(() => {
-        setIsStripeReady(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [stripe, elements, isStripeReady]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -309,7 +315,7 @@ function CheckoutForm() {
       </div>
 
       {/* 2. Conditional Section: Error Card OR Payment Form */}
-      <div className="relative min-h-[300px]">
+      <div className="relative min-h-[600px]">
         {isOutsideZone ? (
             <div className="space-y-4 animate-fade-in mt-6">
               <div className="text-red-600 text-sm font-semibold text-center">
@@ -327,34 +333,18 @@ function CheckoutForm() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
                   >
-                      <img src="/assets/instagram.png" alt="Instagram" className="w-5 h-5" />
+                      <Image src="/assets/instagram.png" alt="Instagram" width={20} height={20} className="w-5 h-5" />
                       <span>Contact us</span>
                   </a>
               </div>
             </div>
         ) : (
           <>
-            {/* SKELETON LAYER: Visible only while Stripe is initializing */}
-            {(!isStripeReady || !stripe || !elements) && (
-              <div className="absolute inset-0 z-10 bg-white pt-2 flex flex-col justify-between">
-                   {/* Only show the bottom half of the skeleton (payment part) */}
-                   <div className='w-full animate-pulse space-y-8'>
-                      <div className='space-y-4'>
-                        <div className='h-6 w-1/4 bg-gray-200 rounded'></div> 
-                        <div className='h-48 w-full bg-gray-100 rounded border border-gray-200'></div>
-                      </div>
-                      <div className='h-12 w-full bg-amber-200 rounded opacity-50'></div>
-                  </div>
-                  <p className="text-center text-xs text-gray-400 animate-pulse mt-4">Securing connection...</p>
-              </div>
-            )}
-
-            {/* REAL FORM LAYER: Hidden until ready, then fades in */}
-            {/* CSS OPTIMIZATION: Use 'absolute opacity-0' instead of 'hidden' to ensure iframe renders dimensions */}
-            <div className={!isStripeReady ? 'absolute w-full opacity-0 pointer-events-none' : 'relative opacity-100 animate-in fade-in duration-500'}>
+            {/* REAL FORM LAYER: Always Visible, Eager Load */}
+            <div>
                 <div>
                   <h3 className="text-base font-semibold mb-2">Payment</h3>
-                  <PaymentElement id="payment-element" onReady={() => setIsStripeReady(true)} />
+                  <PaymentElement id="payment-element" />
                 </div>
 
                 <div className="relative mt-6">

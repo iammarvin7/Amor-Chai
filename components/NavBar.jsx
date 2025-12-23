@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 import { useToast } from "./ToastContext";
 import { ReloadAlert } from "./ReloadAlert";
 import AuthButtons from "./AuthButtons";
+import Image from "next/image";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,7 @@ const NavBar = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         {/* Left: Logo */}
         <Link href="/" className="shrink-0" aria-label="Amor + Chai Landing">
-          <img
+          <Image
             src="/assets/logo.png"
             alt="Amor + Chai logo"
             width={160}
@@ -109,7 +110,7 @@ const NavBar = () => {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
-              <img
+              <Image
                 src="/assets/instagram.png"
                 alt="Instagram"
                 width={36}
@@ -236,7 +237,7 @@ const NavBar = () => {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
-              <img
+              <Image
                 src="/assets/instagram.png"
                 alt="Instagram"
                 width={24}

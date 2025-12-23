@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTheme } from './ThemeContext';
 import { useCart } from './CartContext';
 
@@ -7,10 +8,15 @@ const CursorGlow = () => {
 	const dotRef = useRef(null);
 	const { theme } = useTheme();
 	const { isOpen: isCartOpen } = useCart();
+	const [mounted, setMounted] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	useEffect(() => {
 		const el = dotRef.current;
-		if (!el || isCartOpen) return;
+		if (!el || isCartOpen || !mounted) return;
 		let rafId = 0;
 		let targetX = 0;
 		let targetY = 0;
@@ -35,7 +41,7 @@ const CursorGlow = () => {
 			window.removeEventListener('pointermove', onMove);
 			cancelAnimationFrame(rafId);
 		};
-	}, [isCartOpen]);
+	}, [isCartOpen, mounted]);
 
 	// Convert hex colors to rgba for the gradient
 	const hexToRgba = (hex, alpha) => {
@@ -45,16 +51,17 @@ const CursorGlow = () => {
 		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 	};
 
-	if (isCartOpen) return null;
+	if (isCartOpen || !mounted) return null;
 
-	return (
+	return createPortal(
 		<div
 			ref={dotRef}
-			className="pointer-events-none fixed left-0 top-0 z-[60] hidden h-[300px] w-[300px] rounded-full opacity-40 blur-3xl md:block"
+			className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-[300px] w-[300px] rounded-full opacity-40 blur-3xl md:block"
 			style={{
 				background: `radial-gradient(120px 120px at center, ${hexToRgba(theme.colors.primary, 0.45)}, ${hexToRgba(theme.colors.secondary, 0.25)} 40%, rgba(255,255,255,0) 70%)`,
 			}}
-		/>
+		/>,
+		document.body
 	);
 };
 

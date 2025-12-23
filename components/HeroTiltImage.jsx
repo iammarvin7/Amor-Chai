@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 /**
  * A lightweight 3D-feel tilt image that subtly rotates and translates
@@ -57,17 +58,17 @@ const HeroTiltImage = ({ src, alt = 'Image', className = '' }) => {
 			className={`relative select-none will-change-transform ${className}`}
 			style={{ perspective: '1000px' }}
 		>
-			<img
-				ref={imgRef}
-				src={src}
-				alt={alt}
-				className="h-full w-full rounded-3xl border border-white/60 bg-white/60 object-cover shadow-md backdrop-blur"
-				suppressHydrationWarning
-			/>
+			<div ref={imgRef} className="h-full w-full relative">
+				<Image
+					src={src}
+					alt={alt}
+					fill
+					className="rounded-3xl border border-white/60 bg-white/60 object-cover shadow-md backdrop-blur"
+					suppressHydrationWarning
+				/>
+			</div>
 		</div>
 	);
 };
 
 export default HeroTiltImage;
-
-

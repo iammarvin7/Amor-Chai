@@ -4,6 +4,7 @@ import { useCart } from './CartContext';
 import { useAuth } from './AuthContext';
 import supabase from '../lib/supabaseClient';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const CartDrawer = () => {
 	const { items, removeItem, updateQty, total, isOpen, close, clear } = useCart();
@@ -115,11 +116,15 @@ const CartDrawer = () => {
 						<ul className="space-y-4">
 							{items.map((item) => (
 								<li key={item.id} className="flex items-center gap-3 rounded-lg border p-3">
-									<img
-										src={item.image}
-										alt={item.name}
-										className="h-16 w-16 rounded object-cover"
-									/>
+									<div className="relative h-16 w-16">
+										<Image
+											src={item.image}
+											alt={item.name}
+											width={64}
+											height={64}
+											className="rounded object-cover"
+										/>
+									</div>
 									<div className="min-w-0 flex-1">
 										<p className="truncate font-semibold">{item.name}</p>
 										<p className="text-sm text-gray-600">${item.price?.toFixed(2)}</p>
@@ -241,6 +246,3 @@ const CartDrawer = () => {
 };
 
 export default CartDrawer;
-
-
-
