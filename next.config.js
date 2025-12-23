@@ -1,15 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	experimental: {
-		optimizePackageImports: [],
-	},
-	images: {
-		remotePatterns: [],
-	},
+  experimental: {
+    turbo: false,
+  },
 };
 
-export default nextConfig;
-
-
-
-
+module.exports = nextConfig;
