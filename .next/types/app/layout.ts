@@ -1,4 +1,4 @@
-// File: /Users/marvinchaudhary/Desktop/Codes/REACT/Amor_Chai_website/amor-chai-website/app/layout.jsx
+// File: C:\Users\iamma\OneDrive\Desktop\Projexts\REACT\Amor-Chai\app\layout.jsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -11,28 +11,6 @@ import {
 } from '@stripe/react-stripe-js';
 import supabase from '../../lib/supabaseClient';
 
-const ChaiFormSkeleton = () => (
-  <div className='relative w-full h-full animate-pulse space-y-8 flex flex-col justify-center'>
-    {/* Shipping Address Skeleton */}
-    <div className='space-y-4'>
-      <div className='h-6 w-1/3 bg-white/50 rounded'></div> {/* Label */}
-      <div className='h-12 w-full bg-white/30 rounded'></div> {/* Input */}
-      <div className='h-12 w-full bg-white/30 rounded'></div> {/* Input */}
-      <div className='grid grid-cols-2 gap-4'>
-        <div className='h-12 w-full bg-white/30 rounded'></div> {/* City */}
-        <div className='h-12 w-full bg-white/30 rounded'></div> {/* ZIP */}
-      </div>
-    </div>
-    {/* Payment Skeleton */}
-    <div className='space-y-4'>
-       <div className='h-6 w-1/4 bg-white/50 rounded'></div> {/* Label */}
-       <div className='h-48 w-full bg-white/30 rounded border border-white/20'></div> {/* Payment Element Placeholder */}
-    </div>
-    {/* Pay Button Skeleton */}
-    <div className='h-12 w-full bg-amber-200/50 rounded'></div>
-  </div>
-);
-
 // Define types for safety
 type CartItem = {
   id: string;
@@ -44,8 +22,6 @@ type CartItem = {
 
 // Load Stripe outside of a component's render
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-
 
 /**
  * Main Checkout Page Component
@@ -209,7 +185,7 @@ export default function CheckoutPage() {
       </div>
 
       {/* Right Column: Payment Form */}
-      <div className={`w-full lg:w-[55%] min-h-screen flex flex-col px-8 py-12 lg:overflow-y-auto transition-colors duration-700 ${!clientSecret ? 'bg-gradient-to-br from-matcha-lightest to-matcha-darkest' : 'bg-white'}`}>
+      <div className="w-full lg:w-[55%] min-h-screen flex flex-col px-8 py-12 lg:overflow-y-auto bg-white">
         <div className="w-full max-w-md mx-auto h-full">
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
             
@@ -234,8 +210,9 @@ export default function CheckoutPage() {
                     <CheckoutForm />
                 </Elements>
             ) : !error && (
-                 <div className="h-full flex flex-col justify-center">
-                    <ChaiFormSkeleton />
+                 <div className="h-full flex flex-col justify-center items-center">
+                    {/* Simple Loader */}
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
                  </div>
             )}
         </div>
@@ -261,6 +238,16 @@ function CheckoutForm() {
 
   // Local state to track when PaymentElement is fully rendered
   const [isStripeReady, setIsStripeReady] = useState(false);
+
+  // Fail-safe: Force ready state after 3s to prevent infinite loading if onReady misses
+  useEffect(() => {
+    if (stripe && elements && !isStripeReady) {
+      const timer = setTimeout(() => {
+        setIsStripeReady(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [stripe, elements, isStripeReady]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -349,7 +336,7 @@ function CheckoutForm() {
           <>
             {/* SKELETON LAYER: Visible only while Stripe is initializing */}
             {(!isStripeReady || !stripe || !elements) && (
-              <div className="absolute inset-0 z-10 bg-white pt-2">
+              <div className="absolute inset-0 z-10 bg-white pt-2 flex flex-col justify-between">
                    {/* Only show the bottom half of the skeleton (payment part) */}
                    <div className='w-full animate-pulse space-y-8'>
                       <div className='space-y-4'>
@@ -358,11 +345,13 @@ function CheckoutForm() {
                       </div>
                       <div className='h-12 w-full bg-amber-200 rounded opacity-50'></div>
                   </div>
+                  <p className="text-center text-xs text-gray-400 animate-pulse mt-4">Securing connection...</p>
               </div>
             )}
 
             {/* REAL FORM LAYER: Hidden until ready, then fades in */}
-            <div className={!isStripeReady ? 'opacity-0 pointer-events-none h-0 overflow-hidden' : 'opacity-100 animate-in fade-in duration-500'}>
+            {/* CSS OPTIMIZATION: Use 'absolute opacity-0' instead of 'hidden' to ensure iframe renders dimensions */}
+            <div className={!isStripeReady ? 'absolute w-full opacity-0 pointer-events-none' : 'relative opacity-100 animate-in fade-in duration-500'}>
                 <div>
                   <h3 className="text-base font-semibold mb-2">Payment</h3>
                   <PaymentElement id="payment-element" onReady={() => setIsStripeReady(true)} />
