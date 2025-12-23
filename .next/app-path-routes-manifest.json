@@ -1,1 +1,21 @@
-{"/api/payment-intent-status/route":"/api/payment-intent-status","/api/checkout/route":"/api/checkout","/api/stripe/checkout-session/route":"/api/stripe/checkout-session","/api/create-payment-intent/route":"/api/create-payment-intent","/api/webhooks/route":"/api/webhooks","/api/verify-delivery-zone/route":"/api/verify-delivery-zone","/auth/callback/route":"/auth/callback","/icon.png/route":"/icon.png","/checkout/page":"/checkout","/home/page":"/home","/return/page":"/return","/_not-found/page":"/_not-found","/offers/page":"/offers","/menu/page":"/menu","/products/page":"/products","/who-are-we/page":"/who-are-we","/page":"/","/recipes/page":"/recipes"}
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/checkout/route": "/api/checkout",
+  "/api/create-payment-intent/route": "/api/create-payment-intent",
+  "/api/payment-intent-status/route": "/api/payment-intent-status",
+  "/api/stripe/checkout-session/route": "/api/stripe/checkout-session",
+  "/api/verify-delivery-zone/route": "/api/verify-delivery-zone",
+  "/api/webhooks/route": "/api/webhooks",
+  "/auth/callback/route": "/auth/callback",
+  "/checkout/page": "/checkout",
+  "/home/page": "/home",
+  "/icon.png/route": "/icon.png",
+  "/menu/page": "/menu",
+  "/offers/page": "/offers",
+  "/page": "/",
+  "/products/page": "/products",
+  "/recipes/page": "/recipes",
+  "/return/page": "/return",
+  "/who-are-we/page": "/who-are-we"
+}

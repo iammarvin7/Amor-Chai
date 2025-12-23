@@ -1,1 +1,16 @@
-(()=>{var e={};e.id=492,e.ids=[492],e.modules={846:e=>{"use strict";e.exports=require("next/dist/compiled/next-server/app-page.runtime.prod.js")},9121:e=>{"use strict";e.exports=require("next/dist/server/app-render/action-async-storage.external.js")},9294:e=>{"use strict";e.exports=require("next/dist/server/app-render/work-async-storage.external.js")},3033:e=>{"use strict";e.exports=require("next/dist/server/app-render/work-unit-async-storage.external.js")},3873:e=>{"use strict";e.exports=require("path")},9551:e=>{"use strict";e.exports=require("url")},3052:(e,r,t)=>{"use strict";t.r(r),t.d(r,{GlobalError:()=>n.a,__next_app__:()=>l,pages:()=>u,routeModule:()=>m,tree:()=>d});var s=t(260),o=t(8203),a=t(5155),n=t.n(a),i=t(7292),p={};for(let e in i)0>["default","tree","pages","GlobalError","__next_app__","routeModule"].indexOf(e)&&(p[e]=()=>i[e]);t.d(r,p);let d=["",{children:["/_not-found",{children:["__PAGE__",{},{page:[()=>Promise.resolve().then(t.bind(t,1129)),"C:\\Users\\iamma\\OneDrive\\Desktop\\Projexts\\REACT\\Amor-Chai\\app\\not-found.tsx"]}]},{}]},{layout:[()=>Promise.resolve().then(t.bind(t,2909)),"C:\\Users\\iamma\\OneDrive\\Desktop\\Projexts\\REACT\\Amor-Chai\\app\\layout.jsx"],error:[()=>Promise.resolve().then(t.bind(t,3333)),"C:\\Users\\iamma\\OneDrive\\Desktop\\Projexts\\REACT\\Amor-Chai\\app\\error.jsx"],"not-found":[()=>Promise.resolve().then(t.bind(t,1129)),"C:\\Users\\iamma\\OneDrive\\Desktop\\Projexts\\REACT\\Amor-Chai\\app\\not-found.tsx"],metadata:{icon:[async e=>(await Promise.resolve().then(t.bind(t,2987))).default(e)],apple:[],openGraph:[],twitter:[],manifest:void 0}}],u=[],l={require:t,loadChunk:()=>Promise.resolve()},m=new s.AppPageRouteModule({definition:{kind:o.RouteKind.APP_PAGE,page:"/_not-found/page",pathname:"/_not-found",bundlePath:"",filename:"",appPaths:[]},userland:{loaderTree:d}})},6487:()=>{},8335:()=>{}};var r=require("../../webpack-runtime.js");r.C(e);var t=e=>r(r.s=e),s=r.X(0,[994,766,737],()=>t(3052));module.exports=s})();
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__c22b2975._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_9266b807._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_22a4420b.js")
+R.c("server/chunks/ssr/[root-of-the-server]__02d45344._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_6e285db9._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0356e2cc._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_77ec7569._.js")
+R.c("server/chunks/ssr/app_e744e06a._.js")
+R.c("server/chunks/ssr/_dd1706d9._.js")
+R.c("server/chunks/ssr/app_error_jsx_345a92d7._.js")
+R.c("server/chunks/ssr/_5e689601._.js")
+R.c("server/chunks/ssr/node_modules_next_dist_client_components_2fffaa3a._.js")
+R.c("server/chunks/ssr/_next-internal_server_app__not-found_page_actions_554ec2bf.js")
+R.m(4175)
+module.exports=R.m(4175).exports

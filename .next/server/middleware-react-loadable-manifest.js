@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"app\\\\page.jsx -> ../components/PinkPixelsCanvas":{"id":7625,"files":["static/chunks/625.30fc4a47a8619fab.js"]}}';
