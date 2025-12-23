@@ -1,5 +1,20 @@
 {
+  "/api/payment-intent-status/route": "app/api/payment-intent-status/route.js",
+  "/api/checkout/route": "app/api/checkout/route.js",
+  "/api/stripe/checkout-session/route": "app/api/stripe/checkout-session/route.js",
   "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js",
+  "/api/webhooks/route": "app/api/webhooks/route.js",
+  "/api/verify-delivery-zone/route": "app/api/verify-delivery-zone/route.js",
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/icon.png/route": "app/icon.png/route.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/home/page": "app/home/page.js",
+  "/return/page": "app/return/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/offers/page": "app/offers/page.js",
+  "/menu/page": "app/menu/page.js",
+  "/products/page": "app/products/page.js",
+  "/who-are-we/page": "app/who-are-we/page.js",
   "/page": "app/page.js",
-  "/checkout/page": "app/checkout/page.js"
+  "/recipes/page": "app/recipes/page.js"
 }

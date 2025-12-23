@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app\\\\page.jsx -> ../components/PinkPixelsCanvas\":{\"id\":\"app\\\\page.jsx -> ../components/PinkPixelsCanvas\",\"files\":[\"static/chunks/_app-pages-browser_components_PinkPixelsCanvas_jsx.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST='{"app\\\\page.jsx -> ../components/PinkPixelsCanvas":{"id":7625,"files":["static/chunks/625.30fc4a47a8619fab.js"]}}';
