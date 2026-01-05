@@ -17,6 +17,7 @@ import Script from 'next/script';
 import Analytics from './Analytics';
 import PageContentWrapper from './PageContentWrapper';
 import AuthModal from './AuthModal';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export default function RootClientLayout({ children }) {
 	const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-1MB25XJPRV';
@@ -63,6 +64,7 @@ export default function RootClientLayout({ children }) {
                     </AuthProvider>
                 </ToastProvider>
             </ThemeProvider>
+            <SpeedInsights />
         </>
 	);
 }
