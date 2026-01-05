@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 import { useToast } from "./ToastContext";
-import { ReloadAlert } from "./ReloadAlert";
+
 import AuthButtons from "./AuthButtons";
 import Image from "next/image";
 
@@ -14,7 +14,7 @@ const NavBar = () => {
   const pathname = usePathname();
   const instagramUrl = "https://www.instagram.com/drinkamorchai/";
   const { items, toggle } = useCart();
-  const { user, signOutSuccessMessage, showReloadAlert, clearSignOutMessage, dismissReloadAlert } = useAuth();
+  const { user, signOutSuccessMessage, clearSignOutMessage } = useAuth();
   const { showToast } = useToast();
   const loggedIn = !!user;
   const userName = user?.user_metadata?.first_name || "";
@@ -27,10 +27,7 @@ const NavBar = () => {
     }
   }, [signOutSuccessMessage, showToast, clearSignOutMessage]);
 
-  // Handle reload
-  const handleReload = () => {
-    window.location.reload();
-  };
+
 
   const getNavItemClass = (path) => {
     // Check if the current pathname matches the link path
@@ -59,12 +56,7 @@ const NavBar = () => {
   }
 
   return (
-    <>
-      <ReloadAlert
-        show={showReloadAlert}
-        onReload={handleReload}
-        onDismiss={dismissReloadAlert}
-      />
+
       <nav className="sticky top-0 z-50 w-full border-b border-white/60 bg-white/30 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         {/* Left: Logo */}
@@ -274,7 +266,7 @@ const NavBar = () => {
         </div>
       )}
     </nav>
-    </>
+
   );
 };
 

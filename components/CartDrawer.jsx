@@ -45,22 +45,12 @@ const CartDrawer = () => {
 	};
 
 	const performSignOut = async () => {
-		// 1. Start process
 		setIsSigningOut(true);
 		setSignOutText('Signing out...');
-		
-		// 2. Wait 2 seconds
-		await new Promise(resolve => setTimeout(resolve, 2000));
-		
-		// 3. Update status
-		setSignOutText('Reloading page...');
-		
-		// 4. Wait another 2 seconds
-		await new Promise(resolve => setTimeout(resolve, 2000));
-		
-		// 5. Execute sign out and reload
-		if (supabase) await supabase.auth.signOut();
-		window.location.reload();
+		await authHandleSignOut();
+		close();
+		setIsSigningOut(false);
+		setSignOutText('Sign Out');
 	};
 
 	const onSignOut = () => {

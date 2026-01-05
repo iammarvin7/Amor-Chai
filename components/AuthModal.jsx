@@ -189,6 +189,7 @@ const AuthModal = () => {
                         onChange={(e) => setFirstName(e.target.value)}
                         className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-pink2"
                         required
+                        autoComplete="given-name"
                       />
                   </div>
                   <div className="w-1/2">
@@ -198,6 +199,7 @@ const AuthModal = () => {
                         onChange={(e) => setLastName(e.target.value)}
                         className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-pink2"
                         required
+                        autoComplete="family-name"
                       />
                   </div>
                 </div>
@@ -209,9 +211,10 @@ const AuthModal = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="Enter your email"
                     className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-pink2"
                     required
+                    autoComplete="email"
                   />
               </div>
 
@@ -224,6 +227,7 @@ const AuthModal = () => {
                   placeholder="••••••••"
                   className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-pink2"
                   required
+                  autoComplete={mode === "signup" ? "new-password" : "current-password"}
                 />
               </div>
 
@@ -237,6 +241,7 @@ const AuthModal = () => {
                       placeholder="••••••••"
                       className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-brand-pink2"
                       required
+                      autoComplete="new-password"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Sign up to save your cart across visits.

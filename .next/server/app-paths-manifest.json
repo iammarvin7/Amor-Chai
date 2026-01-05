@@ -1,9 +1,7 @@
 {
-  "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js",
-  "/products/page": "app/products/page.js",
-  "/who-are-we/page": "app/who-are-we/page.js",
-  "/checkout/page": "app/checkout/page.js",
-  "/recipes/page": "app/recipes/page.js",
+  "/offers/page": "app/offers/page.js",
   "/home/page": "app/home/page.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/who-are-we/page": "app/who-are-we/page.js",
   "/page": "app/page.js"
 }

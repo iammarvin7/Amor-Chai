@@ -14,10 +14,7 @@ export const useAuth = () => {
 			isLoading: true,
 			signingOut: false,
 			signOutSuccessMessage: null,
-			showReloadAlert: false,
-			handleSignOut: async () => {},
 			clearSignOutMessage: () => {},
-			dismissReloadAlert: () => {},
 		};
 	}
 	return context;
@@ -29,7 +26,6 @@ export const AuthProvider = ({ children }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [signingOut, setSigningOut] = useState(false);
 	const [signOutSuccessMessage, setSignOutSuccessMessage] = useState(null);
-	const [showReloadAlert, setShowReloadAlert] = useState(false);
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [authModalTab, setAuthModalTab] = useState('login');
 	const authSubscriptionRef = useRef(null);
@@ -86,127 +82,30 @@ export const AuthProvider = ({ children }) => {
 		}
 	}, []);
 
-	// Robust sign-out handler - atomic and idempotent
-	const handleSignOut = useCallback(async (showErrorToast = null) => {
-		// Prevent multiple simultaneous sign-out attempts (idempotent)
-		if (signOutInProgressRef.current) {
-			console.warn('Sign-out already in progress, ignoring duplicate call');
-			return;
-		}
+	// Robust sign-out handler - Instant and Optimistic
+	const handleSignOut = useCallback(async () => {
+		// 1. Optimistic Update: clear UI state immediately
+		setUser(null);
+		setSession(null);
+		
+		// 2. Clear all local storage immediately
+		clearAllStorage();
 
-		if (!supabase) {
-			console.error('Supabase client not available');
-			if (showErrorToast) showErrorToast('Sign-out failed: Supabase not configured');
-			return;
-		}
-
-		signOutInProgressRef.current = true;
-		setSigningOut(true);
-
-		let signOutCompleted = false;
-		let shouldRedirect = false;
-
+		// 3. Fire and forget Supabase sign out
+		// We don't await this because we want the UI to be instant for the user.
+		// Even if this fails network-wise, the user is effectively signed out locally.
 		try {
-			// Step 1: Unsubscribe from auth listeners to prevent race conditions
-			cleanupAuthListeners();
-
-			// Step 2: Sign out from Supabase with timeout to prevent hanging
-			let signOutError = null;
-			try {
-				const signOutPromise = supabase.auth.signOut();
-				const timeoutPromise = new Promise((_, reject) => 
-					setTimeout(() => reject(new Error('Sign-out timeout after 10 seconds')), 10000)
-				);
-
-				const result = await Promise.race([signOutPromise, timeoutPromise]);
-				// If result is an error object, extract the error
-				if (result && typeof result === 'object' && 'error' in result) {
-					signOutError = result.error;
-				} else if (result instanceof Error) {
-					signOutError = result;
-				}
-			} catch (error) {
-				console.error('Sign-out failed or timed out:', error);
-				signOutError = error;
-			}
-
-			// Step 3: Verify session is null (with retry if needed)
-			if (!signOutError) {
-				let sessionCheck = await supabase.auth.getSession();
-				if (sessionCheck.data?.session) {
-					console.warn('Session still exists after signOut, retrying...');
-					// Retry sign-out once with timeout
-					try {
-						const retryPromise = supabase.auth.signOut();
-						const retryTimeout = new Promise((_, reject) => 
-							setTimeout(() => reject(new Error('Retry sign-out timeout')), 5000)
-						);
-						const retryResult = await Promise.race([retryPromise, retryTimeout]);
-						if (retryResult?.error) {
-							console.error('Retry signOut error:', retryResult.error);
-						}
-						// Wait a bit for the session to clear
-						await new Promise(resolve => setTimeout(resolve, 200));
-						sessionCheck = await supabase.auth.getSession();
-						
-						if (sessionCheck.data?.session) {
-							console.error('Session still exists after retry - proceeding with cleanup anyway');
-						}
-					} catch (retryError) {
-						console.error('Retry sign-out failed:', retryError);
-					}
-				}
-			}
-
-			// Step 4: Clear all storage (only after signOut completes)
-			clearAllStorage();
-
-			// Step 5: Reset React state
-			setUser(null);
-			setSession(null);
-
-			// Step 6: Show reload alert (don't redirect automatically)
-			setSignOutSuccessMessage('Signed out successfully. Please reload the page.');
-			setShowReloadAlert(true);
-
-			signOutCompleted = true;
-			// Don't redirect - let user reload manually
-			shouldRedirect = false;
-
-		} catch (error) {
-			console.error('Error during sign-out:', error);
-			
-			// Fallback: manual cleanup even if signOut failed or hung
-			try {
-				console.log('Performing manual cleanup after sign-out error');
-				cleanupAuthListeners();
-				clearAllStorage();
-				setUser(null);
-				setSession(null);
-				shouldRedirect = true;
-			} catch (fallbackError) {
-				console.error('Error in fallback cleanup:', fallbackError);
-				// Force redirect as last resort
-				shouldRedirect = true;
-			}
-
-			if (showErrorToast) {
-				showErrorToast('Sign-out completed with errors, but you have been logged out locally.');
-			}
-		} finally {
-			// Always reset the signingOut flag
-			setSigningOut(false);
-			signOutInProgressRef.current = false;
-
-			// Only redirect on error fallback, not on successful sign-out
-			if (shouldRedirect && !signOutCompleted) {
-				// Only redirect if there was an error and we need fallback cleanup
-				setTimeout(() => {
-					window.location.replace('/');
-				}, 100);
-			}
+			if (supabase) supabase.auth.signOut();
+		} catch (err) {
+			console.error('Background sign-out error:', err);
 		}
-	}, [clearAllStorage, cleanupAuthListeners]);
+
+		// 4. Redirect to home if needed (optional) 
+		// Since we cleared state, the UI should update automatically.
+		// We can force a soft navigation to home to be sure.
+        // window.location.href = '/'; // Hard reload is safest for clearing state but slower. 
+        // Let's rely on state update for "Instant" feel.
+	}, [clearAllStorage]);
 
 	// Initialize auth state and set up listener
 	useEffect(() => {
@@ -287,16 +186,14 @@ export const AuthProvider = ({ children }) => {
 			isLoading,
 			signingOut,
 			signOutSuccessMessage,
-			showReloadAlert,
 			isAuthModalOpen,
 			authModalTab,
 			openAuthModal,
 			closeAuthModal,
 			handleSignOut,
 			clearSignOutMessage: () => setSignOutSuccessMessage(null),
-			dismissReloadAlert: () => setShowReloadAlert(false),
 		}),
-		[user, session, isLoading, signingOut, signOutSuccessMessage, showReloadAlert, isAuthModalOpen, authModalTab, handleSignOut]
+		[user, session, isLoading, signingOut, signOutSuccessMessage, isAuthModalOpen, authModalTab, handleSignOut]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

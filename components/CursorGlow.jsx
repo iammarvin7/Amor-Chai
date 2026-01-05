@@ -16,7 +16,9 @@ const CursorGlow = () => {
 
 	useEffect(() => {
 		const el = dotRef.current;
-		if (!el || isCartOpen || !mounted) return;
+		// Don't early return on isCartOpen here to allow transition out
+		if (!el || !mounted) return;
+		
 		let rafId = 0;
 		let targetX = 0;
 		let targetY = 0;
@@ -29,9 +31,13 @@ const CursorGlow = () => {
 		};
 
 		const loop = () => {
-			x += (targetX - x) * 0.15;
-			y += (targetY - y) * 0.15;
-			el.style.transform = `translate3d(${x - 150}px, ${y - 150}px, 0)`;
+			// Pause calculations if cart is open to save resources
+			if (!isCartOpen) {
+				x += (targetX - x) * 0.15;
+				y += (targetY - y) * 0.15;
+				// Offset by 150 (half of 300px width/height) to center
+				el.style.transform = `translate3d(${x - 150}px, ${y - 150}px, 0)`;
+			}
 			rafId = requestAnimationFrame(loop);
 		};
 
@@ -51,12 +57,14 @@ const CursorGlow = () => {
 		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 	};
 
-	if (isCartOpen || !mounted) return null;
+	if (!mounted) return null;
 
 	return createPortal(
 		<div
 			ref={dotRef}
-			className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-[300px] w-[300px] rounded-full opacity-40 blur-3xl md:block"
+			// z-[60] places it below CartDrawer (z-[70]) but above normal content
+			// opacity toggle handles visibility smoothly
+			className={`pointer-events-none fixed left-0 top-0 z-[60] hidden h-[300px] w-[300px] rounded-full blur-3xl md:block transition-opacity duration-300 ${isCartOpen ? 'opacity-0' : 'opacity-40'}`}
 			style={{
 				background: `radial-gradient(120px 120px at center, ${hexToRgba(theme.colors.primary, 0.45)}, ${hexToRgba(theme.colors.secondary, 0.25)} 40%, rgba(255,255,255,0) 70%)`,
 			}}
