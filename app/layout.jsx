@@ -1,5 +1,6 @@
 import './globals.css';
 import RootClientLayout from '../components/RootClientLayout';
+import { Analytics } from '@vercel/analytics/next';
 
 /**
  * This is the root server-side layout for the application.
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
                 <RootClientLayout>
                     {children}
                 </RootClientLayout>
+				<Analytics />
 			</body>
 		</html>
 	);
