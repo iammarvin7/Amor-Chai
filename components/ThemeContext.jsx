@@ -62,18 +62,12 @@ export const purpleTheme = {
 		cardBorder: '#D4C5FF',   // card border (very light purple)
 	},
 	gradient: {
-		// Multi-stop gradient: Off White → Very Light Pink → Light Lavender → Very Light Purple → Violet
-		// Direction: top-left (light) → bottom-right (dark violet)
-		// 6 stops for creamy, dimensional, non-linear gradient
-		value: 'linear-gradient(to bottom right, #FFFEFE 0%, #FFE8F0 12%, #F5E6F5 25%, #E3D4FF 40%, #D4C5FF 60%, #C9B8FF 75%, #8C6CFF 100%)',
+		// Soft 3-stop gradient (light lavender -> soft violet)
+		value: 'linear-gradient(to bottom right, #E3D4FF, #D4C5FF, #B39CFF)',
 		// Keep individual stops for reference
-		from: '#FFFEFE',         // Off White (0%)
-		stop1: '#FFE8F0',        // Very Light Pink (12%)
-		stop2: '#F5E6F5',        // Light Warm Grey-Pink blend (25%)
-		stop3: '#E3D4FF',        // Light Lavender (40%)
-		stop4: '#D4C5FF',        // Very Light Purple (60%)
-		stop5: '#C9B8FF',        // Light Purple transition (75%)
-		to: '#8C6CFF',           // Violet (100%)
+		from: '#E3D4FF',
+		via: '#D4C5FF',
+		to: '#B39CFF',
 	},
 	glow: {
 		shadow: '0 0 15px 7px rgba(140, 108, 255, 0.6), 0 0 8px 1px rgba(255, 255, 255, 0.8)',
@@ -105,17 +99,12 @@ export const chaiTheme = {
 		cardBorder: '#EEB38C',  // card border (light cream)
 	},
 	gradient: {
-		// Multi-stop gradient: Light Cream → Warm Orange → Medium Brown → Dark Brown
-		// Direction: top-left (lightest) → bottom-right (darkest)
-		// 5 stops for rich, warm, dimensional gradient
-		value: 'linear-gradient(to bottom right, #EEB38C 0%, #F5D5B8 20%, #DF8142 45%, #92664A 70%, #6C3B1C 85%, #5A270F 100%)',
+		// Soft 3-stop gradient (creamy caramel)
+		value: 'linear-gradient(to bottom right, #F5D5B8, #EEB38C, #DF8142)',
 		// Keep individual stops for reference
-		from: '#EEB38C',         // Light Cream (0%)
-		stop1: '#F5D5B8',        // Very Light Cream (20%)
-		stop2: '#DF8142',        // Warm Orange (45%)
-		stop3: '#92664A',        // Medium Brown (70%)
-		stop4: '#6C3B1C',        // Dark Brown (85%)
-		to: '#5A270F',           // Darkest Brown (100%)
+		from: '#F5D5B8',
+		via: '#EEB38C',
+		to: '#DF8142',
 	},
 	glow: {
 		shadow: '0 0 15px 7px rgba(146, 102, 74, 0.6), 0 0 8px 1px rgba(255, 255, 255, 0.8)',
@@ -147,15 +136,12 @@ export const orangeTheme = {
 		cardBorder: '#FFAC4A',   // card border
 	},
 	gradient: {
-		// Multi-stop gradient: Blanched Almond -> Topaz -> Pastel Orange -> Crayola's Orange -> Philippine Orange
-		// Direction: top-left (lightest) -> bottom-right (darkest)
-		value: 'linear-gradient(to bottom right, #FFE9C9 0%, #F9C87C, #FFAC4A, #F97432, #FF7000 100%)',
+		// Soft 3-stop gradient (pastel orange)
+		value: 'linear-gradient(to bottom right, #FFE9C9, #FFAC4A, #F97432)',
 		// Keep individual stops for reference
-		from: '#FFE9C9',         // Blanched Almond (0%)
-		stop1: '#F9C87C',        // Topaz
-		stop2: '#FFAC4A',        // Pastel Orange
-		stop3: '#F97432',        // Crayola's Orange
-		to: '#FF7000',           // Philippine Orange (100%)
+		from: '#FFE9C9',
+		via: '#FFAC4A',
+		to: '#F97432',
 	},
 	glow: {
 		shadow: '0 0 15px 7px rgba(249, 116, 50, 0.6), 0 0 8px 1px rgba(255, 255, 255, 0.8)',

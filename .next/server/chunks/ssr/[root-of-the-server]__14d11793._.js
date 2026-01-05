@@ -1,3 +1,0 @@
-module.exports=[93695,(a,b,c)=>{b.exports=a.x("next/dist/shared/lib/no-fallback-error.external.js",()=>require("next/dist/shared/lib/no-fallback-error.external.js"))},95044,a=>{a.n(a.i(52425))},84951,a=>{a.n(a.i(1022))},46122,a=>{a.n(a.i(98421))},24570,a=>{a.n(a.i(99204))},2894,a=>{a.n(a.i(66188))},13718,a=>{a.n(a.i(85523))},18198,a=>{a.n(a.i(45518))},62212,a=>{a.n(a.i(66114))},73767,a=>{"use strict";var b=a.i(7997);a.s(["default",0,()=>(0,b.jsx)("section",{className:"mx-auto max-w-3xl px-4 py-10",children:(0,b.jsx)("p",{className:"text-center text-2xl font-extrabold tracking-tight",children:"Hi, my name is Estrella 🌟"})}),"metadata",0,{title:"Who Are We | Amor + Chai"}])}];
-
-//# sourceMappingURL=%5Broot-of-the-server%5D__14d11793._.js.map

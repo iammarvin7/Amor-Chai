@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { useAuth } from "./AuthContext";
 import { useToast } from "./ToastContext";
@@ -10,6 +11,7 @@ import Image from "next/image";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
   const instagramUrl = "https://www.instagram.com/drinkamorchai/";
   const { items, toggle } = useCart();
   const { user, signOutSuccessMessage, showReloadAlert, clearSignOutMessage, dismissReloadAlert } = useAuth();
@@ -30,8 +32,31 @@ const NavBar = () => {
     window.location.reload();
   };
 
-  const navItem =
-    "px-3 py-2 text-sm md:text-base font-semibold text-black hover:text-brand-pink2 transition-colors";
+  const getNavItemClass = (path) => {
+    // Check if the current pathname matches the link path
+    // For root path, exact match. For others, startsWith to handle sub-routes.
+    const isActive = path === '/' ? pathname === '/' : (pathname === path || pathname?.startsWith(path + '/'));
+    
+    // Actually, simple startsWith logic for /products -> /products/123
+    // But specific case: /home vs /
+    // If path is /home, match /home.
+    // If path is /menu, match /menu.
+    
+    // Improved logic:
+    const isLinkActive = pathname === path || (path !== '/home' && pathname?.startsWith(path));
+    
+    return `px-3 py-2 text-sm md:text-base font-semibold transition-colors ${
+      isLinkActive ? "text-brand-pink2" : "text-black hover:text-brand-pink2"
+    }`;
+  };
+
+  // Helper for mobile
+  const getMobileNavItemClass = (path) => {
+      const isLinkActive = pathname === path || (path !== '/home' && pathname?.startsWith(path));
+      return `px-3 py-2 text-sm md:text-base font-semibold transition-colors ${
+        isLinkActive ? "text-brand-pink2" : "text-black hover:text-brand-pink2"
+      }`;
+  }
 
   return (
     <>
@@ -57,22 +82,22 @@ const NavBar = () => {
         {/* Desktop: Nav links + Auth/Cart + Instagram */}
         <div className="hidden md:flex items-center gap-6 flex-1">
           <div className="flex items-center gap-4 lg:gap-6">
-            <Link href="/home" className={navItem}>
+            <Link href="/home" className={getNavItemClass("/home")}>
               HOME
             </Link>
-            <Link href="/menu" className={navItem}>
+            <Link href="/menu" className={getNavItemClass("/menu")}>
               MENU
             </Link>
-            <Link href="/offers" className={navItem}>
+            <Link href="/offers" className={getNavItemClass("/offers")}>
               OFFERS
             </Link>
-            <Link href="/recipes" className={navItem}>
+            <Link href="/recipes" className={getNavItemClass("/recipes")}>
               RECIPES
             </Link>
-            <Link href="/products" className={navItem}>
+            <Link href="/products" className={getNavItemClass("/products")}>
               PRODUCTS
             </Link>
-            <Link href="/who-are-we" className={navItem}>
+            <Link href="/who-are-we" className={getNavItemClass("/who-are-we")}>
               WHO ARE WE?
             </Link>
           </div>
@@ -190,42 +215,42 @@ const NavBar = () => {
         <div className="absolute top-16 right-4 w-64 bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-4 z-50 border border-gray-100 transform transition-all md:hidden flex flex-col gap-2">
             <Link
               href="/home"
-              className={navItem}
+              className={getMobileNavItemClass("/home")}
               onClick={() => setIsOpen(false)}
             >
               HOME
             </Link>
             <Link
               href="/menu"
-              className={navItem}
+              className={getMobileNavItemClass("/menu")}
               onClick={() => setIsOpen(false)}
             >
               MENU
             </Link>
             <Link
               href="/offers"
-              className={navItem}
+              className={getMobileNavItemClass("/offers")}
               onClick={() => setIsOpen(false)}
             >
               OFFERS
             </Link>
             <Link
               href="/recipes"
-              className={navItem}
+              className={getMobileNavItemClass("/recipes")}
               onClick={() => setIsOpen(false)}
             >
               RECIPES
             </Link>
             <Link
               href="/products"
-              className={navItem}
+              className={getMobileNavItemClass("/products")}
               onClick={() => setIsOpen(false)}
             >
               PRODUCTS
             </Link>
             <Link
               href="/who-are-we"
-              className={navItem}
+              className={getMobileNavItemClass("/who-are-we")}
               onClick={() => setIsOpen(false)}
             >
               WHO ARE WE?

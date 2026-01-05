@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST="{\n  \"app\": {},\n  \"appUsingSizeAdjust\": false,\n  \"pages\": {},\n  \"pagesUsingSizeAdjust\": false\n}"
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/marvinchaudhary/Desktop/Codes/REACT/amor-chai-website/app/who-are-we/page\":[\"static/media/87069f06a4f1ee13-s.p.woff2\",\"static/media/904be59b21bd51cb-s.p.woff2\",\"static/media/7f06be3f780a819a-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
